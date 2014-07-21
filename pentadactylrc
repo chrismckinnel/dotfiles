@@ -11,10 +11,7 @@ set guioptions+=n
 set editor='mvim -f +<line> +"sil! call cursor(0, <column>)" <file>'
 set hlfind
 
-map jj <Esc>
-imap jj <Esc>
-vmap jj <Esc>
-cmap jj <Esc>
+map ; :
 
 colorscheme zenburn
 
