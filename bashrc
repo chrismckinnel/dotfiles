@@ -24,6 +24,7 @@ alias grm='git rebase master'
 alias grc='git rebase --continue'                                                    
 alias grs='git rebase --skip'                                                        
 alias gmt='git mergetool'
+alias docker='sudo docker'
 
 # Maven aliases
 alias mb='mvn clean install'
