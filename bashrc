@@ -1,7 +1,6 @@
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/share/npm/bin
 
 export TANGENT_USER='mckinnelc'
-export WORKON_HOME=~/virtualenvs
 
 alias ll='ls -la'
 alias gs='git status' 
@@ -138,8 +137,6 @@ function bathroom() {
     ./manage.py runserver 0.0.0.0:8002
 }
 
-source /usr/local/bin/virtualenvwrapper.sh
-
 export PATH="$PATH:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/mysq/lib"
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home
 export PYTHONPATH=~/workspace/wolseley-tools/modules
@@ -148,17 +145,6 @@ export AXIS2_HOME=/usr/local/lib/axis2-1.6.2
 
 #Text Triumvirate settings
 export EDITOR="vim"
-bindkey -v 
-
-# vi style incremental search
-bindkey '^R' history-incremental-search-backward
-bindkey '^S' history-incremental-search-forward
-bindkey '^P' history-search-backward
-bindkey '^N' history-search-forward  
-
-function virtualenv_info {
-    [ $VIRTUAL_ENV ] && echo '('`basename $VIRTUAL_ENV`') '
-}
 
 function box_name {
     [ -f ~/.box-name ] && cat ~/.box-name || hostname -s
