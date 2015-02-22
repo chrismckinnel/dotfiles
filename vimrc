@@ -2,16 +2,25 @@ set nocompatible               " be iMproved
 filetype off                   " required!
 
 set rtp+=~/.vim/bundle/Vundle.vim/
+
 call vundle#begin()
 
-Plugin 'gmarik/vundle'
+" let Vundle manage Vundle
+Plugin 'gmarik/Vundle.vim' 
+
 Plugin 'scrooloose/nerdtree'
 Plugin 'ervandew/supertab'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'davidhalter/jedi-vim'
+Plugin 'andviro/flake8-vim'
+Plugin 'nsf/gocode', {'rtp': 'vim/'}
+Plugin 'fatih/vim-go'
 
 call vundle#end()
 
+" Make tab the default for omni-complete, and make it context aware
+let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
+let g:SuperTabDefaultCompletionType = "context"
 
 " Map the leader key to ,
 let mapleader = ","
@@ -73,7 +82,7 @@ set shell=bash\ --login
 set wildchar=<Tab> wildmenu wildmode=full
 
 " map [jj] to Esc and Write in insert mode
-inoremap jj <Esc>:w<CR>
+inoremap jj <Esc>:w<CR> :redraw!<CR>
 inoremap ;; <End>;<Esc>:w<CR>
 
 " Create Blank Newlines and stay in Normal mode
@@ -144,16 +153,19 @@ autocmd BufWritePre *.py :%s/\s\+$//e
 autocmd VimEnter * wincmd p
 
 " solarized settings
-syntax enable
-let g:solarized_termtrans = 1
-let g:solarized_termcolors = 256
-colorscheme solarized
-set background=dark
+if has('gui_running')
+    colorscheme solarized
+    set background=dark
+else
+    set background=light
+endif
 
+syntax enable
 
 " Make jedi behave better
 let g:jedi#use_tabs_not_buffers = 0
 let g:jedi#popup_on_dot = 0
+let g:jedi#show_call_signatures = 0
 
 " Yank text to the OS X clipboard
 noremap <Leader>y "*y
@@ -184,7 +196,7 @@ nnoremap <S-space> <C-o>
 " Map <Ctrl-c> to auto complete for java files using Eclim
 inoremap <C-c> <C-x><C-u>
 
-" Remap :JavaCorrect to <C-f>
+" Remap :JavaCorrect to <C-g>
 nnoremap <C-g> :JavaCorrect <CR>
 
 "
@@ -195,3 +207,17 @@ set sw=4
 set ts=4
 
 set clipboard=unnamed
+
+" Use real tabs for .go files
+au BufNewFile,BufRead *.go setlocal noet ts=4 sw=4 sts=4
+
+" Map ,d to jump to definition for go files
+au FileType go nmap <leader>d <Plug>(go-def)
+
+au FileType go nmap <leader>r <Plug>(go-run)
+au FileType go nmap <leader>b <Plug>(go-build)
+au FileType go nmap <leader>t <Plug>(go-test)
+au FileType go nmap <leader>c <Plug>(go-coverage)
+
+au FileType go nmap <leader>i <Plug>(go-install)
+au FileType go nmap <leader>gd <Plug>(go-doc)

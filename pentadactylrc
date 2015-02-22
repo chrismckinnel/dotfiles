@@ -13,11 +13,24 @@ set hlfind
 
 map ; :
 
+" disable smooth scrolling
+set scrollsteps=1
+set scrolltime=0
+
+" highlight and jump to words as you search for them
+set incfind
+
+" set faster scrolling
+map -b j 8j
+map -b k 8k
+map -b l 8l
+map -b h 8h
+
 colorscheme zenburn
 
 " hintkeys """"""""""
-set hintkeys='asdfjkl;'
-highlight -a Hint text-transform: uppercase;
+set hintkeys='asdfjkl'
+highlight -a Hint text-transform: uppercase; font-size: 11pt !important;
 
 " font options """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 hi Normal -a font-size: 15px !important;
