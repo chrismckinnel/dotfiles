@@ -8,13 +8,13 @@ group user
 " options """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set guioptions-=br
 set guioptions+=n
-set editor='mvim -f +<line> +"sil! call cursor(0, <column>)" <file>'
+set editor='gvim -f +<line> +"sil! call cursor(0, <column>)" <file>'
 set hlfind
 
 map ; :
 
 " disable smooth scrolling
-set scrollsteps=1
+set scrollsteps=4
 set scrolltime=0
 
 " highlight and jump to words as you search for them

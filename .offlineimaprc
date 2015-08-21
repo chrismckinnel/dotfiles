@@ -1,0 +1,32 @@
+[general]
+accounts = Tangent
+maxsyncaccounts = 1
+
+[Account Tangent]
+localrepository = Local
+remoterepository = Remote
+autorefresh = 1
+quick = 10
+
+[Repository Local]
+type = Maildir
+localfolders = ~/mail/tangent
+
+[Repository Remote]
+type = IMAP
+remotehost = 
+remoteuser = 
+remotepass = 
+keepalive = 60
+holdconnectionopen = yes
+ssl = yes
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+
+
+[mbnames]
+enabled = yes
+filename = ~/.mutt/mailboxes
+header = "mailboxes "
+peritem = "+%(accountname)s/%(foldername)s"
+sep = " "
+footer = "\n"

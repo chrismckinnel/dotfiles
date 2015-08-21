@@ -1,0 +1,66 @@
+# A basic .muttrc for use with Tangent mail servers
+source ~/.mutt/mailboxes
+
+# Change the following six lines to match your Gmail account details
+set imap_user = ""
+set imap_pass = "" # leave blank for prompt
+set from=""
+set realname = ""
+set sendmail="/usr/bin/msmtp"
+
+# Change the following line to a different editor you prefer (and update the Dockerfile accordingly, of course).
+set editor = "vim"
+
+# I like seeing some headers. :)
+ignore *
+unignore date subject x- user-agent posted-to content-type
+unignore to cc bcc reply-to from
+
+# TODO figure out how to use the sidebar more effectively :)
+set sidebar_visible = no
+
+set resolve = no # uh, don't randomly take me to other messages when I do things
+
+# Basic config, you can leave this as is
+set folder = "~/mail"
+set spoolfile = "+tangent/INBOX"
+set imap_check_subscribed
+set mail_check = 60
+set timeout = 300
+set imap_keepalive = 300
+set postponed = "+tangent/Drafts"
+set record = "+tangent/Sent\ Items"
+
+set header_cache=~/.mutt/cache/headers
+set message_cachedir=~/.mutt/cache/bodies
+set certificate_file=~/.mutt/certificates
+
+set move = no
+set include
+set sort = 'reverse-threads'
+set sort_aux = 'last-date-received'
+set auto_tag = yes
+
+# sane gpg settings to be a good encryption
+# social citizen of the world
+set pgp_replyencrypt       # auto encrypt replies to encrypted mail
+set pgp_replysign          # auto sign replies to signed mail
+set pgp_replysignencrypted # auto sign & encrypt to signed & encrypted mail
+set pgp_show_unusable=no   # show which keys are no good anymore
+
+ignore "Authentication-Results:"
+ignore "DomainKey-Signature:"
+ignore "DKIM-Signature:"
+hdr_order Date From To Cc
+alternative_order text/plain text/html *
+auto_view text/html
+
+bind editor <Tab> complete-query
+bind editor ^T complete
+bind editor <space> noop
+
+set mailcap_path = ~/.mutt/mailcap
+
+# colors
+source ~/.mutt/mutt-colors-solarized-dark-16.muttrc
+source ~/.mutt/mutt-patch-highlighting.muttrc

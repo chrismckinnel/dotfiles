@@ -11,8 +11,6 @@ export HISTFILESIZE=2000000
 shopt -s histappend
 export PROMPT_COMMAND='history -a'
 
-export HOST_IP=$(ifconfig wlp3s0 | grep 'inet 192' | awk '{ print $2}')
-
 function cd() {
     builtin cd "$1"
     NOW=$(date +"%Y-%m-%dT%T")
@@ -46,12 +44,22 @@ alias grc='git rebase --continue'
 alias grs='git rebase --skip'                                                        
 alias gmt='git mergetool'
 alias pacman='sudo pacman'
-alias db-mysql='mysql -u docker -h 127.0.0.1 -P 3307 -pdocker'
-alias db-pg='PGPASSWORD=docker psql services -U docker -h 127.0.0.1 -p 5433 -w'
 alias t='todo'
 alias tls='todo -p'
 alias td='todo -dl'
 alias ta='todo -al'
+alias up='docker-compose up'
+alias nah-stage='cd ~/workspace/nah-chameleon/deploy; fab stage abort; fab stage deploy'
+alias ducks='du -cksh * | sort -rn | head'
+
+alias supervisorctl='sudo supervisorctl'
+alias westway='sudo netctl switch-to westway'
+alias penthouse='sudo netctl switch-to penthouse'
+alias lock='xscreensaver-command -lock'
+alias bashrc='vim ~/.bashrc'
+alias sbashrc='source ~/.bashrc'
+alias vimrc='vim ~/.vimrc'
+alias g='ping 8.8.8.8'
 
 
 # Docker aliases
@@ -99,39 +107,6 @@ function ec() {
     NSENTER_PATH=$NSENTER_PATH nsenter -t $(docker inspect --format '{{ .State.Pid }}' $(echo $1|cut -d',' -f1)) -m -u -n -i -p -w
 }
 
-# Hook our nsenter into the docker auto-complete for some sweet TAB action
-complete_nsenter() {
-    COMPREPLY=()
-    cur=${COMP_WORDS[COMP_CWORD]}
-    prev=${COMP_WORDS[COMP_CWORD-1]}
-
-    nsenter_exec=$(type -P nsenter)
-    nsenter=$(basename $nsenter_exec)
-
-    CONTAINER_IDS=$(docker ps -a |grep -v CONTAINER\ ID|awk '{print $1}')
-    CONTAINER_NAMES=$(docker ps -a |grep -v CONTAINER\ ID|awk '{print $NF}')
-
-    COMPREPLY=($(compgen -W "$CONTAINER_IDS $CONTAINER_NAMES" -- $cur))
-}
-complete -F complete_nsenter ec
-
-alias supervisorctl='sudo supervisorctl'
-alias j='cd ~/workspace/jektabox'
-alias c='cd ~/workspace/wolseley-connect-phone-directory'
-alias d='cd ~/workspace/wolseley-dashboard && source ~/virtualenvs/dashboard/bin/activate'
-alias s='cd ~/workspace/wolseley-services-layer && source ~/virtualenvs/services/bin/activate'
-alias cc='cd ~/workspace/wolseley-consumer-controls'
-alias ni='cd ~/workspace/wolseley-national-accounts-importer'
-alias work='sudo netctl switch-to tangent-staff'
-alias gibbon='sudo netctl switch-to gibbon'
-alias westway='sudo netctl switch-to westway'
-alias penthouse='sudo netctl switch-to penthouse'
-alias lock='xscreensaver-command -lock'
-alias bashrc='vim ~/.bashrc'
-alias sbashrc='source ~/.bashrc'
-alias vimrc='vim ~/.vimrc'
-alias g='ping 8.8.8.8'
-
 
 #### Tmux shortcuts ####
 
@@ -165,8 +140,6 @@ function tmux-nails() {
     tmux attach -t nails
 }
 
-alias tmux-jektr='tmux new-session -c ~/workspace/jektabox -s jektr'
-
 source /usr/share/git/completion/git-completion.bash
 
 function _forward_mysql_via_ssh() {
@@ -194,13 +167,6 @@ function _forward_rmq_via_ssh() {
     eval $CMD
 }
 
-function forward-boot2docker-ports() {
-    for i in {49000..49900}; do
-        VBoxManage modifyvm "boot2docker-vm" --natpf1 "tcp-port$i,tcp,,$i,,$i";
-        VBoxManage modifyvm "boot2docker-vm" --natpf1 "udp-port$i,udp,,$i,,$i";
-    done
-}
-
 export GOPATH=$HOME/workspace/go
 export PATH="$PATH:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/mysq/lib"
 export PATH="$PATH:$GOPATH/bin"
@@ -210,11 +176,6 @@ export EDITOR="vim"
 
 # Ag silver searcher options
 alias ag='ag --smart-case --follow --color'
-
-function jektr {
-    cd /home/cmckinnel/workspace/jektabox
-    ./run.sh webclient /containers/webclient $1 8000
-}
 
 function dashboard {
     cd /home/cmckinnel/workspace/wolseley-dashboard
@@ -246,35 +207,12 @@ function wcc {
     ./run.sh local $1 /containers/wolseley-consumer-controls 8001
 }
 
-function jekta-logs {
-    cd /containers/jektabox/logs
-}
-
 function dashboard-logs {
     tail -f /containers/wolseley-dashboard/logs/*
 }
 
 function services-logs {
     tail -f /containers/wolseley-services-layer/logs/*
-}
-
-function jektr-dev() {
-    ssh -i /home/cmckinnel/jekta-pems/jektr-ireland-ec2-instances.pem ubuntu@ec2-54-76-231-83.eu-west-1.compute.amazonaws.com
-}
-
-function jektr-test() {
-    ssh -i /home/cmckinnel/jekta-pems/jektr-singapore-ec2-instances.pem ubuntu@ec2-54-255-167-175.ap-southeast-1.compute.amazonaws.com
-}
-
-function jektr-demo() {
-    ssh -i /home/cmckinnel/jekta-pems/jektr-california-ec2-instances.pem ubuntu@ec2-54-183-188-192.us-west-1.compute.amazonaws.com
-}
-
-function jl() {
-    tail -F /containers/webclient/logs/django_management.log \
-            /containers/webclient/logs/celery.log            \
-            /containers/webclient/logs/clientproxy.log       \
-            /containers/webclient/logs/postgresql.log
 }
 
 function aa_mod_parameters () { 
@@ -356,52 +294,6 @@ function show_mod_parameter_info ()
   done < <(cut -d' ' -f1 /proc/modules | sort)
 }
 
-# Add these functions to your ~/.bashrc in order to be able to query private
-# Docker registries from the commandline. You'll need the JQ library 
-# (http://stedolan.github.io/jq/) to be installed. Alternatively, you can just 
-# pipe to " python -mjson.tool" to get pretty JSON formatting
- 
-# TODO Enter the correct details here
-DOCKER_REGISTRY_HOST=docker.tangentlabs.co.uk
-DOCKER_REGISTRY_AUTH=publisher:FDA6A53A-6E14-444F-930B-9EF1749D2744
- 
-DOCKER_STAGE_HOST=docker-images-dev.tangentlabs.co.uk
-DOCKER_STAGE_AUTH=publisher:2aeI4rTeRiDtonm7BqyicOalMv5zKw3EEj2y7CEQ1An9AneIgh
-
-# PROD
-
-function _docker_fetch() {
-    echo $1
-    curl -s --user $DOCKER_REGISTRY_AUTH $1 | jq '.'
-}
- 
-# List repos (query string is optional)
-function docker_live_search() {
-    _docker_fetch https://$DOCKER_REGISTRY_HOST/v1/search?q=$1
-}
- 
-# List tags for a repo
-function docker_live_tags() {
-    _docker_fetch https://$DOCKER_REGISTRY_HOST/v1/repositories/$1/tags
-}
-
-# STAGE
-function _docker_stage_fetch() {
-
-    echo $1
-    curl -s --user $DOCKER_STAGE_AUTH $1 | jq '.'
-}
-
-# List repos (query string is optional)
-function docker_stage_search() {
-    _docker_stage_fetch https://$DOCKER_STAGE_HOST/v1/search?q=$1
-}
-
-# List tags for a repo
-function docker_stage_tags() {
-    _docker_stage_fetch https://$DOCKER_STAGE_HOST/v1/repositories/$1/tags
-}
-
 function bright() {
     sudo tee /sys/class/backlight/gmux_backlight/brightness <<< 82310 &> /dev/null
 }
@@ -413,6 +305,22 @@ function dim() {
 function eclim() {
     cd /usr/share/eclipse/
     ./eclimd
+}
+
+function gmail() {
+    docker run -ti -v /home/cmckinnel/.mutt/cache:/home/user/.mutt/cache -e GMAIL=chrismckinnel@gmail.com --name mutt --rm mutt
+}
+
+function work-email() {
+    docker run -ti -v /home/cmckinnel/.mutt/cache:/home/user/.mutt/cache -v /home/cmckinnel/mail:/home/user/mail --name work-email --net=host --rm work-email
+}
+
+function offlineimap() {
+    docker run -ti -v /home/cmckinnel/mail/:/home/user/mail --name offlineimap --net=host --rm offlineimap
+}
+
+function postgres_ts_connect() {
+    docker run -d --name postgres_ts_connect -p 5432:5432 -v /var/lib/postgresql/data:/var/lib/postgresql/data -e POSTGRES_USER=ts_connect -e POSTGRES_PASSWORD=ts_connect postgres:9.4
 }
 
 ssh-add -l >/dev/null || alias ssh='ssh-add -l >/dev/null || ssh-add && unalias ssh; ssh'
