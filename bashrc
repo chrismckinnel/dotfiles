@@ -140,7 +140,10 @@ function tmux-nails() {
     tmux attach -t nails
 }
 
-source /usr/share/git/completion/git-completion.bash
+# Source bash completions
+if [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+fi
 
 function _forward_mysql_via_ssh() {
     CMD_START="ssh"
