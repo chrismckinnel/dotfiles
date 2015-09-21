@@ -1,0 +1,9 @@
+! Free up left Alt for remapping
+remove mod1 = Alt_L
+
+! Left Alt remapped to Super_L
+clear mod4
+keycode 64 = Super_L
+add mod4 = Super_L
+
+pointer = 1 2 3 5 4 6 7 8 9 10 11 12

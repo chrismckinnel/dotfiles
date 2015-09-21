@@ -19,6 +19,7 @@ function cd() {
 
 # Aliases to make my life easier
 alias aurget='aurget --noedit'
+alias apt-get='sudo apt-get'
 alias startx='ssh-agent startx'
 alias ls='ls --color'
 alias ll='ls -la'
