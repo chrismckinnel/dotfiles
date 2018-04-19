@@ -152,15 +152,9 @@ autocmd BufWritePre *.py :%s/\s\+$//e
 " Go to previous (last accessed) window.
 autocmd VimEnter * wincmd p
 
-" solarized settings
-if has('gui_running')
-    colorscheme solarized
-    set background=dark
-else
-    set background=light
-endif
-
 syntax enable
+colorscheme xoria256
+
 
 " Make jedi behave better
 let g:jedi#use_tabs_not_buffers = 0

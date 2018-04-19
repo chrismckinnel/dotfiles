@@ -92,4 +92,4 @@ function exit_code {
 
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-PS1=$'$(exit_code) $(virtualenv_info)$(hostname):$(short_pwd) $(git_branch)$(git_untracked)$(git_staged)$(git_needs_commit)'
+PS1=$'$(virtualenv_info)$(hostname):$(short_pwd) $(git_branch)$(git_untracked)$(git_staged)$(git_needs_commit)'

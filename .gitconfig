@@ -13,3 +13,7 @@
     praise = blame
     visualise = !gitk
     graph = log --color --graph --pretty=format:\"%h | %ad | %an | %s%d\" --date=short
+
+[credential]
+    helper = !aws codecommit credential-helper $@
+    UseHttpPath = true

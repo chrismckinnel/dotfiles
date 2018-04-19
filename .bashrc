@@ -1,11 +1,5 @@
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/share/npm/bin
 
-export LC_ALL=en_GB.utf-8 
-export LANG="$LC_ALL" 
-
-export TANGENT_USER='mckinnelc'
-export EVOSHAVE_USER='ubuntu'
-
 export HISTSIZE=1000000
 export HISTFILESIZE=2000000
 shopt -s histappend
@@ -20,9 +14,9 @@ function cd() {
 # Aliases to make my life easier
 alias aurget='aurget --noedit'
 alias apt-get='sudo apt-get'
-alias startx='ssh-agent startx'
 alias ls='ls --color'
 alias ll='ls -la'
+alias l='ls -la'
 alias gs='git status' 
 alias gl='git log --graph --decorate'
 alias gco='git checkout'                                                              
@@ -109,67 +103,10 @@ function ec() {
 }
 
 
-#### Tmux shortcuts ####
-
-function tmux-irssi() {
-    tmux new-session -d -s irssi || return
-    tmux send-keys -t irssi:0 "irssi -c freenode" C-m
-}
-
-function tmux-bash() {
-    tmux new-session -d -s bash
-}
-
-function tmux-general() {
-    tmux-irssi
-    tmux-jabber
-    tmux-bash
-    tmux attach -t bash
-}
-
-function tmux-jabber() {
-    tmux new-session -d -s jabber || return
-    tmux send-keys -t jabber:0 "profanity -a work" C-m
-}
-
-function tmux-nails() {
-    tmux-general
-    tmux new-session -d -s nails
-    tmux send-keys -t nails:0 "nailsinc" C-m
-    tmux new-window -t nails:1 -n vim
-    tmux send-keys -t nails:1 "cd ~/workspace/nailsinc-us; vim +NERDTree" C-m
-    tmux attach -t nails
-}
-
 # Source bash completions
 if [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
 fi
-
-function _forward_mysql_via_ssh() {
-    CMD_START="ssh"
-    CMD_END=" -f $1 -L $2:$3:3306 -N"
-    CMD="$CMD_START $CMD_END"
-    eval $CMD
-}
-
-function _forward_postgres_via_ssh() {
-    CMD_START="ssh"
-    CMD_END=" -f $1 -L $2:$3:5432 -N"
-    CMD="$CMD_START $CMD_END"
-    eval $CMD
-}
-
-function _forward_rmq_via_ssh() {
-    CMD_START="ssh"
-    CMD_END=" -f $1 -L $2:localhost:55672 -N"
-    if [ -n "$3" ]
-    then
-        CMD_START="ssh -p $3"
-    fi
-    CMD="$CMD_START $CMD_END"
-    eval $CMD
-}
 
 export GOPATH=$HOME/workspace/go
 export PATH="$PATH:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/mysq/lib"
@@ -327,6 +264,8 @@ function postgres_ts_connect() {
     docker run -d --name postgres_ts_connect -p 5432:5432 -v /var/lib/postgresql/data:/var/lib/postgresql/data -e POSTGRES_USER=ts_connect -e POSTGRES_PASSWORD=ts_connect postgres:9.4
 }
 
-ssh-add -l >/dev/null || alias ssh='ssh-add -l >/dev/null || ssh-add && unalias ssh; ssh'
+cd ~
+
+fish
 
 . ~/.bash_prompt
