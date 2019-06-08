@@ -200,6 +200,8 @@ set expandtab
 set sw=4
 set ts=4
 
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+
 set clipboard=unnamed
 
 " Use real tabs for .go files
