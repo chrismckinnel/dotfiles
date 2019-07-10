@@ -34,26 +34,6 @@ vim:
 	ln -svf $(HOME)/dotfiles/.vimrc $(HOME)/.vimrc
 	git clone https://github.com/VundleVim/Vundle.vim.git $(HOME)/.vim/bundle/Vundle.vim
 
-firefox:
-	sudo apt-get install -y iceweasel	
-
-pentadactyl: firefox zip
-	mkdir -p $(HOME)/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}
-	rm -rf $(HOME)/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}/*
-	cd $(HOME)/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384} && wget http://5digits.org/nightly/pentadactyl-latest.xpi
-	cd $(HOME)/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384} && unzip pentadactyl-latest.xpi
-	cd $(HOME)/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384} && rm -rf pentadactyl-latest.xpi
-	sudo rm -rf /usr/share/mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}
-	sudo mv --backup=numbered $(HOME)/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384} /usr/share/mozilla/extensions/
-	mkdir -p $(HOME)/.pentadactyl/colors
-	ln -svf $(HOME)/dotfiles/pentadactyl/colors/zenburn.penta $(HOME)/.pentadactyl/colors/zenburn.penta
-	@if [ -f $(HOME)/.pentadactylrc ]; then mv --backup=numbered $(HOME)/.{pentadactylrc,pentadactylrc.old}; fi
-	ln -svf $(HOME)/dotfiles/.pentadactylrc $(HOME)/.pentadactylrc
-
-xmodmap:
-	@if [ -f $(HOME)/.Xmodmap ]; then mv -f $(HOME)/.{Xmodmap,Xmodmap.old}; fi
-	ln -svf $(HOME)/dotfiles/.Xmodmap $(HOME)/.Xmodmap
-
 post_install:
 	echo "Installation complete."
 	echo "Please run 'vim +PluginInstall +qall' to install your vim plugins"
@@ -61,4 +41,4 @@ post_install:
 zip:
 	sudo apt-get install -y zip
 
-install: check_ssh_key dotfiles bash git tmux vim pentadactyl xmodmap post_install
+install: check_ssh_key dotfiles bash git tmux vim post_install
