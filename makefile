@@ -1,4 +1,4 @@
-.PHONY: check_ssh_key dotfiles
+.PHONY: check_ssh_key dotfiles bash git tmux vim post_install zip
 
 SHELL := /bin/bash
 HOME=/home/$$USER
@@ -33,6 +33,8 @@ vim:
 	@if [ -f $(HOME)/.vimrc ]; then mv --backup=numbered $(HOME)/.{vimrc,vimrc.old}; fi
 	ln -svf $(HOME)/dotfiles/.vimrc $(HOME)/.vimrc
 	git clone https://github.com/VundleVim/Vundle.vim.git $(HOME)/.vim/bundle/Vundle.vim
+	mkdir $(HOME)/.vim/colors
+	cp vim/colors/xoria256.vim $(HOME)/.vim/colors/xoria256.vim
 
 post_install:
 	echo "Installation complete."
@@ -40,5 +42,6 @@ post_install:
 
 zip:
 	sudo apt-get install -y zip
+	sudo apt-get install -y unzip
 
-install: check_ssh_key dotfiles bash git tmux vim post_install
+install: check_ssh_key dotfiles bash git tmux vim zip post_install
